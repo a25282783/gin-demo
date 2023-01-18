@@ -15,5 +15,13 @@
         id: {{.userid}}
         sex: {{.usersex}}
     </div>
+
+    <div>
+        <form action="/create/post" method="post">
+            title:<input type="text" name="title" value="{{.t}}">
+            article: {{.a}}
+            <button type="submit">submit</button>
+        </form>
+    </div>
 </body>
 </html>
