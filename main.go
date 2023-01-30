@@ -1,6 +1,7 @@
 package main
 
 import (
+	"gin-demo/router"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,8 +14,21 @@ func main() {
 	r.LoadHTMLGlob("views/*")
 	// 加載資源
 	r.Static("/public", "./public")
-	// 請求參數
-	r.GET("/index", func(ctx *gin.Context) {
+	// 404
+	r.NoRoute(func(ctx *gin.Context) {
+		ctx.HTML(http.StatusOK, "404.html", "")
+	})
+	user := r.Group("/user")
+	{
+		user.GET("/", router.GetUsers)
+	}
+
+	post := r.Group("/post")
+	{
+		post.GET("/", router.GetPosts)
+	}
+
+	r.GET("/", func(ctx *gin.Context) {
 		userid := ctx.Query("id")
 		usersex := ctx.Query("sex")
 		ctx.HTML(http.StatusOK, "index.html", gin.H{
@@ -40,10 +54,7 @@ func main() {
 			"a": a,
 		})
 	})
-	// 404
-	r.NoRoute(func(ctx *gin.Context) {
-		ctx.HTML(http.StatusOK, "404.html", "")
-	})
+
 	// redirect
 	r.GET("/redirect", func(ctx *gin.Context) {
 		ctx.Redirect(http.StatusFound, "http://localhost:8008/index")
